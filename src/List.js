@@ -1,6 +1,6 @@
-import './App.css';
-
-import Todo from "./todo";
+import React from 'react';
+import Todo from "./Todo";
+import {Col} from "reactstrap";
 
 
 function List(props){
@@ -8,7 +8,7 @@ function List(props){
     const {list=[]} = props;
 
     return (
-        <div >
+        <Col>
             {list.map((el, index)=>
                 <Todo todo={el}
                       key={el.id}
@@ -23,7 +23,7 @@ function List(props){
                       editTodo={props.editTodo}
                 />
             )}
-        </div>
+        </Col>
 );
 }
 export  default  List;
