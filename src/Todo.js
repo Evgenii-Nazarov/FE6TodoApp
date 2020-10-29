@@ -1,6 +1,7 @@
-import React from 'react';
-import {useState} from "react";
-import {Card, CardBody, CardTitle, Col, Row} from "reactstrap";
+import React, {useState} from 'react';
+import {Button, Card, CardBody, CardTitle, Input, Label, Row} from "reactstrap";
+import ModalDeleteTodo from "./ModalDeleteTodo";
+import ModalEditTodo from "./ModalEditTodo";
 
 const style = {
     'textDecoration': 'line-through'
@@ -12,8 +13,9 @@ function Todo(props) {
 
     const [inputValue, setInputValue] = useState(todo.title)
     const [isEditMode, setIsEditMode] = useState(false)
+    const [isDeleteMode, setIsDeleteMode] = useState(false)
 
-    const deleteButtonHandler = () => {
+    const deleteTodo = () => {
         props.deleteTodoItem(todo.id)
     }
     const isDone = done ? style : {}
@@ -24,34 +26,48 @@ function Todo(props) {
         setIsEditMode(false)
     }
 
+    const changeDeleteMode = () => {
+        setIsDeleteMode(!isDeleteMode)
+    }
+
+    const changeEditMode = () => {
+        setIsEditMode(!isEditMode)
+    }
+
     return (
         <Row className='d-flex justify-content-center'>
-            <Col xs='3'>
-                <Card className='m-0'>
-                    <CardBody>
-                        <CardTitle style={isDone}>{todo.title}</CardTitle>
-                        <button onClick={deleteButtonHandler}>delete</button>
-                        <button onClick={() => props.updateTodo(todo.id)}>upd</button>
-                        <button disabled={isFirst} onClick={() => props.moveUp(props.index, props.index - 1)}>↑
-                        </button>
-                        <button disabled={isLast} onClick={() => props.moveUp(props.index, props.index + 1)}>↓</button>
 
-                        {!isEditMode && <button onClick={() => setIsEditMode(!isEditMode)}>edit</button>}
+            <Card className='m-0'>
+                <ModalDeleteTodo todo={todo}
 
-                        {isEditMode &&
-                        <>
-                            <label>new title:</label>
-                            <input type="text"
+                                 setIsModalOpen={changeDeleteMode}
+                                 isModalOpen={isDeleteMode}
+                                 deleteTodo={deleteTodo}
+                />
 
-                                   onChange={(e) => setInputValue(e.target.value)}
-                                   value={inputValue}/>
-                            <button onClick={saveButtonHandler}>save</button>
-                            <button onClick={() => setIsEditMode(!isEditMode)}>cancel</button>
-                        </>}
-                    </CardBody>
-                </Card>
+                <ModalEditTodo todo={todo}
+                               isModalOpen={isEditMode}
+                               setIsModalOpen={changeEditMode}
+                               editTodo={props.editTodo}
+                />
 
-            </Col>
+
+
+                <CardBody>
+                    <CardTitle style={isDone}>{todo.title}</CardTitle>
+                    <Button onClick={() => setIsDeleteMode(true)}>delete</Button>
+                    <Button onClick={() => props.updateTodo(todo.id)}>upd</Button>
+                    <Button disabled={isFirst}
+                            onClick={() => props.moveUp(props.index, props.index - 1)}>
+                        ↑
+                    </Button>
+                    <Button disabled={isLast} onClick={() => props.moveUp(props.index, props.index + 1)}>↓</Button>
+
+                    <Button onClick={() => setIsEditMode(!isEditMode)}>edit</Button>
+
+
+                </CardBody>
+            </Card>
         </Row>
     );
 }

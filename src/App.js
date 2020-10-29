@@ -1,19 +1,17 @@
 import React, {useState} from 'react';
 import List from "./List";
-import {Col, Container, Row} from "reactstrap";
+import {Container} from "reactstrap";
+import Controller from "./Controller";
 
 function App() {
-
     const initialList = [
-        {id: 1, title: 'Learn', done: false},
+        {id: 1, title: 'Learn', done: false, status: ''},
         {id: 2, title: 'Learn Js', done: true},
         {id: 3, title: 'Sleep', done: false},
         {id: 4, title: 'Drink Coffee', done: true}
     ]
 
     const [list, setList] = useState(initialList)
-    const [inputValue, setInputValue] = useState('')
-
 
     const doTodo = (cardId) => {
         const newList = list.map((el) => {
@@ -25,23 +23,23 @@ function App() {
         setList(newList)
     }
 
-    const AddButtonHandler = () => {
+    const addTodo = (newTitle, newStatus) => {
+        newStatus = newStatus === 'true'
+
         const newTodo = {
             id: Math.random(),
-            title: inputValue,
-            done: false,
+            title: newTitle,
+            done: newStatus,
         }
+
         const newList = [...list, newTodo];
         setList(newList);
     }
 
-    const changeTitle = (cardId) => {
+    const changeTitle = () => {
         const newList = [...list]
 
-
         setList(newList)
-
-
     }
 
     const deleteTodo = (todoId) => {
@@ -50,19 +48,17 @@ function App() {
 
     }
 
-    const editTodo = (todoId, newTitle) => {
+    const editTodo = (todoId, newTitle, newStatus) => {
+        newStatus = newStatus === 'true'
+
         const newList = list.map((el) => {
             if (el.id === todoId) {
                 el.title = newTitle
+                el.done = newStatus
             }
             return el
         })
         setList(newList)
-    }
-
-    const inputChangeHandler = (e) => {
-
-        setInputValue(e.target.value)
     }
 
     const moveUp = (currentIndex, nextIndex) => {
@@ -80,23 +76,17 @@ function App() {
     return (
         <Container>
 
-            <Row className='d-flex flex-column'>
-                <Col className='d-flex justify-content-center'>
-                    <span>TodoList</span>
-                    <input onChange={inputChangeHandler} value={inputValue}/>
-                    <button onClick={AddButtonHandler}>Add Todo</button>
-                </Col>
+            <Controller addTodo={addTodo}/>
 
 
-                <List list={list}
-                      deleteTodo={deleteTodo}
-                      updateTodo={doTodo}
-                      moveUp={moveUp}
-                      changeTitle={changeTitle}
-                      editTodo={editTodo}
+            <List list={list}
+                  deleteTodo={deleteTodo}
+                  updateTodo={doTodo}
+                  moveUp={moveUp}
+                  changeTitle={changeTitle}
+                  editTodo={editTodo}
 
-                />
-            </Row>
+            />
 
         </Container>
     );

@@ -1,14 +1,13 @@
 import React from 'react';
 import Todo from "./Todo";
-import {Col} from "reactstrap";
+import {Row} from "reactstrap";
 
 
 function List(props){
-    // const list = props.list
     const {list=[]} = props;
 
     return (
-        <Col>
+        <Row className='d-flex flex-column justify-content-center'>
             {list.map((el, index)=>
                 <Todo todo={el}
                       key={el.id}
@@ -23,7 +22,7 @@ function List(props){
                       editTodo={props.editTodo}
                 />
             )}
-        </Col>
+        </Row>
 );
 }
 export  default  List;
